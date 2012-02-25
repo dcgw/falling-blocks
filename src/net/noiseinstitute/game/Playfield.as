@@ -9,7 +9,8 @@ package net.noiseinstitute.game {
         public static const ROWS:int = 20;
         public static const COLUMNS:int = 10;
 
-        private static const EXPLOSION_MAGNITUDE_MULTIPLIER:Number = 1.5;
+        private static const EXPLOSION_CENTRE_Y_BIAS:Number = 0.6;
+        private static const EXPLOSION_MAGNITUDE_MULTIPLIER:Number = 2.25;
         private static const EXPLOSION_PERTURB_RANDOMNESS:Number = 0.25;
         private static const EXPLOSION_ANGLE_RANDOMNESS:Number = 10;
 
@@ -59,6 +60,9 @@ package net.noiseinstitute.game {
                     magnitude = m;
                 }
             }
+
+            explosionCentre.y += magnitude * EXPLOSION_CENTRE_Y_BIAS;
+
             magnitude *= EXPLOSION_MAGNITUDE_MULTIPLIER;
 
             var y:int;
