@@ -17,5 +17,9 @@ package net.noiseinstitute.game {
 
             graphic = new PlayfieldGraphic(blocks);
         }
+
+        public function explode (blockX:int, blockY:int):void {
+            blocks[blockY][blockX] = Block.NONE;
+        }
     }
 }

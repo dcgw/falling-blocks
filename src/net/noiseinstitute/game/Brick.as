@@ -17,7 +17,7 @@ package net.noiseinstitute.game {
         public static const T:uint = 5;
         public static const Z:uint = 6;
 
-        public static const shapes:Vector.<Vector.<Point>> = new <Vector.<Point>>[
+        public static const SHAPES:Vector.<Vector.<Point>> = new <Vector.<Point>>[
                 new <Point>[new Point(0, -2), new Point(0, -1), new Point(0, 0), new Point(0, 1)],
                 new <Point>[new Point(0, -1), new Point(0, 0), new Point(0, 1), new Point(-1, 1)],
                 new <Point>[new Point(0, -1), new Point(0, 0), new Point(0, 1), new Point(1, 1)],
@@ -34,6 +34,9 @@ package net.noiseinstitute.game {
                 Block.CYAN,
                 Block.BLUE,
                 Block.PURPLE];
+
+        private static const ADJACENT_POINTS:Vector.<Point> = new <Point>[
+                new Point(0, -1), new Point(1, 0), new Point(0, 1), new Point(-1, 0)];
 
         public var shape:uint;
         public var rotation:int;
@@ -91,20 +94,45 @@ package net.noiseinstitute.game {
                 }
             }
 
+            var settled:Boolean = false;
+
             if (Input.pressed(Main.DOWN) || ++ticks == FALL_INTERVAL_TICKS) {
                 if (collides(x, y+1, rotation)) {
-                    var shapeDefinition:Vector.<Point> = shapes[shape];
-                    for each (var block:Point in shapeDefinition) {
-                        var blockX:int = calculateBlockX(x, block, rotation);
-                        var blockY:int = calculateBlockY(y, block, rotation);
-                        playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
-                    }
-
-                    newBrick();
+                    settled = true;
                 } else {
                     ++y;
                 }
                 ticks = 0;
+            }
+
+            var shapeDefinition:Vector.<Point> = SHAPES[shape];
+            var block:Point;
+            var blockX:int;
+            var blockY:int;
+
+            var exploding:Boolean = explodes();
+
+            if (settled || exploding) {
+                for each (block in shapeDefinition) {
+                    blockX = calculateBlockX(x, block, rotation);
+                    blockY = calculateBlockY(y, block, rotation);
+                    playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
+                }
+            }
+
+            if (exploding) {
+                for each (block in shapeDefinition) {
+                    blockX = calculateBlockX(x, block, rotation);
+                    blockY = calculateBlockY(y, block, rotation);
+                    if (blockX >= 0 && blockX < Playfield.COLUMNS && blockY >= 0 && blockY < Playfield.ROWS) {
+                        playfield.explode(blockX, blockY);
+                        break;
+                    }
+                }
+            }
+
+            if (settled || exploding) {
+                newBrick();
             }
         }
 
@@ -116,7 +144,7 @@ package net.noiseinstitute.game {
         }
 
         private function collides(x:int, y:int, rotation:int):Boolean {
-            var shapeDefinition:Vector.<Point> = shapes[shape];
+            var shapeDefinition:Vector.<Point> = SHAPES[shape];
             for each (var block:Point in shapeDefinition) {
                 var blockX:int = calculateBlockX(x, block, rotation);
                 var blockY:int = calculateBlockY(y, block, rotation);
@@ -125,6 +153,25 @@ package net.noiseinstitute.game {
                         || blockY >= Playfield.ROWS
                         || (blockY >= 0 && playfield.blocks[blockY][blockX] != Block.NONE)) {
                     return true;
+                }
+            }
+
+            return false;
+        }
+
+        private function explodes():Boolean {
+            var shapeDefinition:Vector.<Point> = SHAPES[shape];
+            var colour:uint = SHAPE_COLOURS[shape];
+            for each (var block:Point in shapeDefinition) {
+                var blockX:int = calculateBlockX(x, block, rotation);
+                var blockY:int = calculateBlockY(y, block, rotation);
+                for each (var point:Point in ADJACENT_POINTS) {
+                    var adjacentX:int = blockX + point.x;
+                    var adjacentY:int = blockY + point.y;
+                    if (adjacentX >= 0 && adjacentX < Playfield.COLUMNS && adjacentY >= 0 && adjacentY < Playfield.ROWS
+                            && playfield.blocks[adjacentY][adjacentX] == colour) {
+                        return true;
+                    }
                 }
             }
 
