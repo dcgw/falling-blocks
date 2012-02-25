@@ -12,19 +12,16 @@ package net.noiseinstitute.game {
                 Block.BLUE,
                 Block.PURPLE];
 
-        public static const rotationMatrix:Vector.<Vector.<Point>> = new <Vector.<Point>>[
-                new <Point>[new Point(1, 0), new Point(0, 1)],
-                new <Point>[new Point(0, -1), new Point(1, 0)],
-                new <Point>[new Point(-1, 0), new Point(0, -1)],
-                new <Point>[new Point(0, 1), new Point(-1, 0)]];
 
         public function render(target:BitmapData, x:Number, y:Number, shape:uint,
-                rotation:uint, playfieldX:Number, playfieldY:Number, camera:Point):void {
+                rotation:int, playfieldX:Number, playfieldY:Number, camera:Point):void {
             var shapeDefinition:Vector.<Point> = Brick.shapes[shape];
             for each (var p:Point in shapeDefinition) {
-                var rx:Number = playfieldX + (x + (p.x * rotationMatrix[rotation][0].x) + (p.y * rotationMatrix[rotation][0].y)) * Block.WIDTH - camera.x;
-                var ry:Number = playfieldY + (y + (p.x * rotationMatrix[rotation][1].x) + (p.y * rotationMatrix[rotation][1].y)) * Block.HEIGHT - camera.y;
-                Block.draw(target, shapeColours[shape], rx, ry);
+                var blockX:int = x + (p.x * Brick.rotationMatrix[rotation][0].x) + (p.y * Brick.rotationMatrix[rotation][0].y);
+                var blockY:int = y + (p.x * Brick.rotationMatrix[rotation][1].x) + (p.y * Brick.rotationMatrix[rotation][1].y);
+                var renderX:Number = playfieldX + blockX * Block.WIDTH - camera.x;
+                var renderY:Number = playfieldY + blockY * Block.HEIGHT - camera.y;
+                Block.draw(target, shapeColours[shape], renderX, renderY);
             }
         }
     }
