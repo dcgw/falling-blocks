@@ -6,6 +6,9 @@ package net.noiseinstitute.game {
     import net.noiseinstitute.basecode.VectorMath;
 
     public class Playfield extends Entity {
+        public static const WIDTH:int = COLUMNS * Block.WIDTH;
+        public static const HEIGHT:int = ROWS * Block.HEIGHT;
+
         public static const ROWS:int = 20;
         public static const COLUMNS:int = 10;
 
