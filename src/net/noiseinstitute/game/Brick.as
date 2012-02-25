@@ -87,7 +87,7 @@ package net.noiseinstitute.game {
 
             if (Input.pressed(Main.DROP)) {
                 ticks = FALL_INTERVAL_TICKS - 1;
-                while (!collides(x, y+1, rotation)) {
+                while (!collides(x, y+1, rotation) && !explodes(x, y + 1, rotation)) {
                     ++y;
                 }
             }
@@ -108,7 +108,7 @@ package net.noiseinstitute.game {
             var blockX:int;
             var blockY:int;
 
-            var exploding:Boolean = explodes();
+            var exploding:Boolean = explodes(x, y, rotation);
 
             if (settled || exploding) {
                 for each (block in shapeDefinition) {
@@ -157,7 +157,7 @@ package net.noiseinstitute.game {
             return false;
         }
 
-        private function explodes():Boolean {
+        private function explodes (x:Number, y:Number, rotation:int):Boolean {
             var shapeDefinition:Vector.<Point> = SHAPES[shape];
             var colour:uint = SHAPE_COLOURS[shape];
             for each (var block:Point in shapeDefinition) {
