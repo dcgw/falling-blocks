@@ -28,7 +28,7 @@ package net.noiseinstitute.game {
             Input.define(DOWN, Key.DOWN);
             Input.define(DROP, Key.C);
 
-            FP.screen.color = 0x000000;
+            FP.screen.color = 0x444444;
             FP.console.enable();
 
             FP.world = new GameWorld();

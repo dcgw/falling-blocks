@@ -35,8 +35,6 @@ package net.noiseinstitute.game {
                 Block.BLUE,
                 Block.PURPLE];
 
-        private static const ADJACENT_POINTS:Vector.<Point> = new <Point>[
-                new Point(0, -1), new Point(1, 0), new Point(0, 1), new Point(-1, 0)];
 
         public var shape:uint;
         public var rotation:int;
@@ -165,7 +163,7 @@ package net.noiseinstitute.game {
             for each (var block:Point in shapeDefinition) {
                 var blockX:int = calculateBlockX(x, block, rotation);
                 var blockY:int = calculateBlockY(y, block, rotation);
-                for each (var point:Point in ADJACENT_POINTS) {
+                for each (var point:Point in Playfield.ADJACENT_POINTS) {
                     var adjacentX:int = blockX + point.x;
                     var adjacentY:int = blockY + point.y;
                     if (adjacentX >= 0 && adjacentX < Playfield.COLUMNS && adjacentY >= 0 && adjacentY < Playfield.ROWS
