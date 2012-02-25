@@ -2,8 +2,8 @@ package net.noiseinstitute.game {
     import net.flashpunk.Entity;
 
     public class Playfield extends Entity {
-        private static const ROWS:int = 20;
-        private static const COLUMNS:int = 10;
+        public static const ROWS:int = 20;
+        public static const COLUMNS:int = 10;
 
         private var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
 

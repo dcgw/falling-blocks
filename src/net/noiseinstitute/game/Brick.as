@@ -27,9 +27,18 @@ package net.noiseinstitute.game {
         private var playfield:Playfield;
         private var brickGraphic:BrickGraphic;
 
+        private var ticks:int = 0;
+
         public function Brick(playfield:Playfield) {
             this.playfield = playfield;
             brickGraphic = new BrickGraphic();
+        }
+
+        override public function update():void {
+            if (++ticks == 15) {
+                ++y;
+                ticks = 0;
+            }
         }
 
         override public function render():void {
