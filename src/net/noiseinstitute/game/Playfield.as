@@ -5,7 +5,7 @@ package net.noiseinstitute.game {
         public static const ROWS:int = 20;
         public static const COLUMNS:int = 10;
 
-        private var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
+        public var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
 
         public function Playfield() {
             for (var y:int = 0; y < ROWS; ++y) {

@@ -17,8 +17,8 @@ package net.noiseinstitute.game {
                 rotation:int, playfieldX:Number, playfieldY:Number, camera:Point):void {
             var shapeDefinition:Vector.<Point> = Brick.shapes[shape];
             for each (var p:Point in shapeDefinition) {
-                var blockX:int = x + (p.x * Brick.rotationMatrix[rotation][0].x) + (p.y * Brick.rotationMatrix[rotation][0].y);
-                var blockY:int = y + (p.x * Brick.rotationMatrix[rotation][1].x) + (p.y * Brick.rotationMatrix[rotation][1].y);
+                var blockX:int = Brick.calculateBlockX(x, p, rotation);
+                var blockY:int = Brick.calculateBlockY(y, p, rotation);
                 var renderX:Number = playfieldX + blockX * Block.WIDTH - camera.x;
                 var renderY:Number = playfieldY + blockY * Block.HEIGHT - camera.y;
                 Block.draw(target, shapeColours[shape], renderX, renderY);

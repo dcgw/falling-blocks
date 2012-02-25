@@ -25,12 +25,18 @@ package net.noiseinstitute.game {
                 new <Point>[new Point(-1, 0), new Point(0, 0), new Point(0, 1), new Point(1, 1)]];
 
         public var shape:uint;
-        public var rotation:uint;
+        public var rotation:int;
 
         private var playfield:Playfield;
         private var brickGraphic:BrickGraphic;
 
         private var ticks:int = 0;
+
+        public static const rotationMatrix:Vector.<Vector.<Point>> = new <Vector.<Point>>[
+            new <Point>[new Point(1, 0), new Point(0, 1)],
+            new <Point>[new Point(0, -1), new Point(1, 0)],
+            new <Point>[new Point(-1, 0), new Point(0, -1)],
+            new <Point>[new Point(0, 1), new Point(-1, 0)]];
 
         public function Brick(playfield:Playfield) {
             this.playfield = playfield;
@@ -39,15 +45,32 @@ package net.noiseinstitute.game {
 
         override public function update():void {
             if (Input.pressed(Main.LEFT) && !Input.pressed(Main.RIGHT)) {
-                --x;
+                if (!collides(x-1, y, rotation)) {
+                    --x;
+                }
             } else if (Input.pressed(Main.RIGHT)) {
-                ++x;
+                if (!collides(x+1, y, rotation)) {
+                    ++x;
+                }
             }
 
+            var newRotation:int = -1;
             if (Input.pressed(Main.ROTATE_LEFT) && !Input.pressed(Main.ROTATE_RIGHT)) {
-                rotation = Range.wrap(rotation - 1, 0, 3);
+                newRotation = Range.wrap(rotation - 1, 0, 3);
             } else if (Input.pressed(Main.ROTATE_RIGHT)) {
-                rotation = Range.wrap(rotation + 1, 0, 3);
+                newRotation = Range.wrap(rotation + 1, 0, 3);
+            }
+
+            if (newRotation != -1) {
+                if (!collides(x, y, newRotation)) {
+                    rotation = newRotation;
+                } else if (!collides(x-1, y, newRotation)) {
+                    rotation = newRotation;
+                    --x;
+                } else if (!collides(x+1, y, newRotation)) {
+                    rotation = newRotation;
+                    ++x;
+                }
             }
 
             if (Input.pressed(Main.DOWN)) {
@@ -57,6 +80,30 @@ package net.noiseinstitute.game {
                 ++y;
                 ticks = 0;
             }
+        }
+
+        private function collides(x:int, y:int, rotation:int):Boolean {
+            var shapeDefinition:Vector.<Point> = shapes[shape];
+            for each (var block:Point in shapeDefinition) {
+                var blockX:int = calculateBlockX(x, block, rotation);
+                var blockY:int = calculateBlockY(y, block, rotation);
+                if (blockX >= Playfield.COLUMNS
+                        || blockX < 0
+                        || blockY >= Playfield.ROWS
+                        || (blockY >= 0 && playfield.blocks[blockY][blockX] != Block.NONE)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public static function calculateBlockX (brickX:int, block:Point, rotation:int):int {
+            return brickX + (block.x * Brick.rotationMatrix[rotation][0].x) + (block.y * rotationMatrix[rotation][0].y);
+        }
+
+        public static function calculateBlockY (brickY:int, block:Point, rotation:int):int {
+            return brickY + (block.x * Brick.rotationMatrix[rotation][1].x) + (block.y * rotationMatrix[rotation][1].y);
         }
 
         override public function render():void {
