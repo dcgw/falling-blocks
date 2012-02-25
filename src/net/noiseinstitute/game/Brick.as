@@ -24,6 +24,15 @@ package net.noiseinstitute.game {
                 new <Point>[new Point(-1, 0), new Point(0, 0), new Point(1, 0), new Point(0, 1)],
                 new <Point>[new Point(-1, 0), new Point(0, 0), new Point(0, 1), new Point(1, 1)]];
 
+        public static const SHAPE_COLOURS:Vector.<uint> = new <uint>[
+                Block.RED,
+                Block.ORANGE,
+                Block.YELLOW,
+                Block.GREEN,
+                Block.CYAN,
+                Block.BLUE,
+                Block.PURPLE];
+
         public var shape:uint;
         public var rotation:int;
 
@@ -73,13 +82,28 @@ package net.noiseinstitute.game {
                 }
             }
 
-            if (Input.pressed(Main.DOWN)) {
-                ++y;
-                ticks = 0;
-            } else if (++ticks == 15) {
-                ++y;
+            if (Input.pressed(Main.DOWN) || ++ticks == 15) {
+                if (collides(x, y+1, rotation)) {
+                    var shapeDefinition:Vector.<Point> = shapes[shape];
+                    for each (var block:Point in shapeDefinition) {
+                        var blockX:int = calculateBlockX(x, block, rotation);
+                        var blockY:int = calculateBlockY(y, block, rotation);
+                        playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
+                    }
+
+                    newBrick();
+                } else {
+                    ++y;
+                }
                 ticks = 0;
             }
+        }
+
+        public function newBrick():void {
+            x = Math.floor(Playfield.COLUMNS * 0.5);
+            y = -2;
+            shape = Math.floor(Math.random() * 7);
+            rotation = Math.floor(Math.random() * 4);
         }
 
         private function collides(x:int, y:int, rotation:int):Boolean {

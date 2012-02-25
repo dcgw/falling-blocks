@@ -7,9 +7,7 @@ package net.noiseinstitute.game {
             add(playfield);
 
             var brick:Brick = new Brick(playfield);
-            brick.x = Math.floor(Playfield.COLUMNS * 0.5);
-            brick.y = -2;
-            brick.shape = Brick.T;
+            brick.newBrick();
             add(brick);
         }
     }
