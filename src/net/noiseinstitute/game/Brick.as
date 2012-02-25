@@ -7,6 +7,8 @@ package net.noiseinstitute.game {
     import net.noiseinstitute.basecode.Range;
 
     public class Brick extends Entity {
+        private static const FALL_INTERVAL_TICKS:int = 15;
+
         public static const I:uint = 0;
         public static const J:uint = 1;
         public static const L:uint = 2;
@@ -82,7 +84,14 @@ package net.noiseinstitute.game {
                 }
             }
 
-            if (Input.pressed(Main.DOWN) || ++ticks == 15) {
+            if (Input.pressed(Main.DROP)) {
+                ticks = FALL_INTERVAL_TICKS - 1;
+                while (!collides(x, y+1, rotation)) {
+                    ++y;
+                }
+            }
+
+            if (Input.pressed(Main.DOWN) || ++ticks == FALL_INTERVAL_TICKS) {
                 if (collides(x, y+1, rotation)) {
                     var shapeDefinition:Vector.<Point> = shapes[shape];
                     for each (var block:Point in shapeDefinition) {
