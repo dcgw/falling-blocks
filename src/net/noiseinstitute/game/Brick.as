@@ -3,6 +3,8 @@ package net.noiseinstitute.game {
 
     import net.flashpunk.Entity;
     import net.flashpunk.FP;
+    import net.flashpunk.utils.Input;
+    import net.noiseinstitute.basecode.Range;
 
     public class Brick extends Entity {
         public static const I:uint = 0;
@@ -23,6 +25,7 @@ package net.noiseinstitute.game {
                 new <Point>[new Point(-1, 0), new Point(0, 0), new Point(0, 1), new Point(1, 1)]];
 
         public var shape:uint;
+        public var rotation:uint;
 
         private var playfield:Playfield;
         private var brickGraphic:BrickGraphic;
@@ -35,7 +38,22 @@ package net.noiseinstitute.game {
         }
 
         override public function update():void {
-            if (++ticks == 15) {
+            if (Input.pressed(Main.LEFT) && !Input.pressed(Main.RIGHT)) {
+                --x;
+            } else if (Input.pressed(Main.RIGHT)) {
+                ++x;
+            }
+
+            if (Input.pressed(Main.ROTATE_LEFT) && !Input.pressed(Main.ROTATE_RIGHT)) {
+                rotation = Range.wrap(rotation - 1, 0, 3);
+            } else if (Input.pressed(Main.ROTATE_RIGHT)) {
+                rotation = Range.wrap(rotation + 1, 0, 3);
+            }
+
+            if (Input.pressed(Main.DOWN)) {
+                ++y;
+                ticks = 0;
+            } else if (++ticks == 15) {
                 ++y;
                 ticks = 0;
             }
@@ -47,7 +65,7 @@ package net.noiseinstitute.game {
             camera.y = world ? world.camera.y : FP.camera.y;
 
             brickGraphic.render(renderTarget ? renderTarget : FP.buffer,
-                    x, y, shape, playfield.x, playfield.y, camera);
+                    x, y, shape, rotation, playfield.x, playfield.y, camera);
         }
     }
 }
