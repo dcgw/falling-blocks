@@ -18,7 +18,9 @@ package net.noiseinstitute.game {
         private static const EXPLOSION_ANGLE_RANDOMNESS:Number = 10;
 
         public var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
-        public var explodedBlocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
+        private var explodedBlocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
+
+        public var onExplosion:Function;
 
         private var explodingBlocks:Vector.<Point> = new <Point>[];
         private var explodingBlocksCount:int = 0;
@@ -64,9 +66,14 @@ package net.noiseinstitute.game {
                 }
             }
 
+            var unbiasedExplosionCentreY:Number = explosionCentre.y;
             explosionCentre.y += magnitude * EXPLOSION_CENTRE_Y_BIAS;
 
             magnitude *= EXPLOSION_MAGNITUDE_MULTIPLIER;
+
+            if (onExplosion != null) {
+                onExplosion(explosionCentre.x, unbiasedExplosionCentreY, magnitude);
+            }
 
             var y:int;
             var x:int;
