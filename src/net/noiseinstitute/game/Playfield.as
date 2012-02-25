@@ -97,7 +97,20 @@ package net.noiseinstitute.game {
                             var newX:int = Math.round(Static.point.x);
                             var newY:int = Math.round(Static.point.y);
 
-                            if (newX >= 0 && newX < COLUMNS && newY >= 0 && newY < ROWS) {
+                            while (newX < 0 || newX >= COLUMNS) {
+                                if (newX < 0) {
+                                    newX = -newX;
+                                }
+                                if (newX >= COLUMNS) {
+                                    newX = COLUMNS - (newX - COLUMNS) - 1;
+                                }
+                            }
+
+                            if (newY >= ROWS) {
+                                newY = ROWS - (newY - ROWS) - 1;
+                            }
+
+                            if (newY >= 0) {
                                 explodedBlocks[newY][newX] = blocks[y][x];
                             }
                         } else {
@@ -141,8 +154,6 @@ package net.noiseinstitute.game {
                     explodeRecurse(adjacentX, adjacentY);
                 }
             }
-
-            blocks[blockY][blockX] = Block.NONE;
         }
     }
 }
