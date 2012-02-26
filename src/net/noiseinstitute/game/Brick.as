@@ -36,6 +36,8 @@ package net.noiseinstitute.game {
                 Block.PURPLE];
 
 
+        public var onGameOver:Function;
+
         public var shape:uint;
         public var rotation:int;
 
@@ -113,7 +115,16 @@ package net.noiseinstitute.game {
                 for each (block in shapeDefinition) {
                     blockX = calculateBlockX(x, block, rotation);
                     blockY = calculateBlockY(y, block, rotation);
-                    playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
+                    if (blockY < 0) {
+                        if (settled) {
+                            active = false;
+                            if (onGameOver != null) {
+                                onGameOver();
+                            }
+                        }
+                    } else {
+                        playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
+                    }
                 }
             }
 
@@ -128,12 +139,13 @@ package net.noiseinstitute.game {
                 }
             }
 
-            if (settled || exploding) {
+            if (active && (settled || exploding)) {
                 newBrick();
             }
         }
 
         public function newBrick():void {
+            active = true;
             x = Math.floor(Playfield.COLUMNS * 0.5);
             y = -2;
             shape = Math.floor(Math.random() * 7);
