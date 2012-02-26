@@ -16,7 +16,7 @@ package net.noiseinstitute.game {
         public static const BLUE:uint = 6;
         public static const PURPLE:uint = 7;
 
-        private static const colours:Vector.<uint> = new <uint>[
+        public static const COLOURS:Vector.<uint> = new <uint>[
                 0x000000,
                 0xff0000,
                 0xff8800,
@@ -32,7 +32,7 @@ package net.noiseinstitute.game {
                 Static.rect.y = y;
                 Static.rect.width = WIDTH;
                 Static.rect.height = HEIGHT;
-                target.fillRect(Static.rect, colours[block]);
+                target.fillRect(Static.rect, COLOURS[block]);
             }
         }
     }

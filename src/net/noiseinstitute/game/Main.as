@@ -6,6 +6,10 @@ package net.noiseinstitute.game {
 
     [SWF(width="640", height="480", frameRate="60", backgroundColor="000000")]
     public class Main extends Engine {
+        //noinspection JSUnusedLocalSymbols
+        [Embed(source="Font.ttf", embedAsCFF="false", fontFamily="font")]
+        private static const FONT:Class;
+
         public static const WIDTH:int = 640;
         public static const HEIGHT:int = 480;
 

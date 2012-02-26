@@ -1,13 +1,13 @@
 ﻿package net.flashpunk.graphics 
 {
-	import flash.display.BitmapData;
-	import flash.text.TextField;
-	import flash.text.TextFormat;
-	import flash.text.TextLineMetrics;
+    import flash.display.BitmapData;
+    import flash.text.TextField;
+    import flash.text.TextFormat;
+    import flash.text.TextLineMetrics;
 
-	import net.flashpunk.FP;
+    import net.flashpunk.FP;
 
-	/**
+    /**
 	 * Used for drawing text using embedded fonts.
 	 * 
 	 * Note that users of Flex 3 must edit this class to get FlashPunk games to compile.

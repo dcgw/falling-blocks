@@ -34,6 +34,8 @@ package net.noiseinstitute.game {
         private var brick:Brick;
         private var playfield:Playfield = new Playfield();
 
+        private var message:Message = new Message();
+
         public function GameWorld() {
             musicStartChannel = musicStart.play();
             musicStartChannel.soundTransform = new SoundTransform(MUSIC_VOLUME);
@@ -55,6 +57,8 @@ package net.noiseinstitute.game {
             playfield.onExplosion = onExplosion;
 
             addGraphic(new Image(FRAME_IMAGE));
+
+            add(message);
         }
 
         private function onExplosion(x:int, y:int, magnitude:Number):void {
