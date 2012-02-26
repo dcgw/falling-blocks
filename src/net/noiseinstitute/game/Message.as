@@ -3,7 +3,6 @@ package net.noiseinstitute.game {
     import net.flashpunk.FP;
     import net.flashpunk.graphics.Graphiclist;
     import net.flashpunk.graphics.Text;
-    import net.noiseinstitute.basecode.Range;
 
     public class Message extends Entity {
         private var text:Text;
@@ -12,24 +11,18 @@ package net.noiseinstitute.game {
         private var outline3:Text;
         private var outline4:Text;
 
-        private static const COLOURS:Vector.<uint> = new <uint>[
-                0xff0000,
-                0xff8800,
-                0xffff00,
-                0x00ff00,
-                0x00ffff,
-                0x4444ff,
-                0xff00ff];
-
-        private static const COLOUR_TICKS:int = 20;
+        private static const COLOUR_TICKS:int = 120;
 
         private var tick:int = 0;
+
+        private static const SATURATION:Number = 1;
+        private static const VALUE:Number = 1;
 
         public function Message() {
             text = new Text("PRESS\nSPACE");
             text.font = "font";
             text.size = 16;
-            text.color = COLOURS[0];
+            text.color = FP.getColorHSV(0, SATURATION, VALUE);
 
             outline1 = new Text("");
             outline2 = new Text("");
@@ -47,16 +40,8 @@ package net.noiseinstitute.game {
         }
 
         override public function update():void {
-            var leftColourI:int = Math.floor(tick / COLOUR_TICKS);
-            var rightColourI:int = Range.wrap(leftColourI + 1, 0, COLOURS.length - 1);
-
-            var leftColour:uint = COLOURS[leftColourI];
-            var rightColour:uint = COLOURS[rightColourI];
-
-            var t:Number = tick / COLOUR_TICKS - leftColourI;
-            text.color = FP.colorLerp(leftColour, rightColour, t);
-
-            tick = Range.wrap(tick + 1, 0, COLOURS.length * COLOUR_TICKS - 1);
+            text.color = FP.getColorHSV((tick / COLOUR_TICKS) % 1, SATURATION, VALUE);
+            ++tick;
         }
     }
 }
