@@ -59,6 +59,7 @@ package net.noiseinstitute.game {
 
             addGraphic(new Image(FRAME_IMAGE));
 
+            message.text = "PRESS\nSPACE";
             add(message);
         }
 

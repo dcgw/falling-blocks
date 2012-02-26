@@ -41,8 +41,6 @@ package net.noiseinstitute.game {
             outline1.x = outline3.y = -2;
             outline2.y = outline4.x = 2;
 
-            text = "PRESS\nSPACE";
-
             graphic = new Graphiclist(outline1, outline2, outline3, outline4, textGraphic);
         }
 
