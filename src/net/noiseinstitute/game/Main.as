@@ -32,7 +32,7 @@ package net.noiseinstitute.game {
             Input.define(ROTATE_RIGHT, Key.V, Key.UP);
             Input.define(DOWN, Key.DOWN);
             Input.define(DROP, Key.C);
-            Input.define(START, Key.ENTER, Key.SPACE);
+            Input.define(START, Key.ENTER, Key.SPACE, Key.P);
 
             FP.screen.color = 0x444444;
             // FP.console.enable();

@@ -39,6 +39,8 @@ package net.noiseinstitute.game {
 
         private var message:Message = new Message();
 
+        private var paused:Boolean = false;
+
         public function GameWorld() {
             musicStartChannel = musicStart.play();
             musicStartChannel.soundTransform = new SoundTransform(MUSIC_VOLUME);
@@ -87,18 +89,31 @@ package net.noiseinstitute.game {
 
         private function onBlur(event:Event):void {
             if (brick.active) {
-                // TODO
-            } else {
-                message.text = "CLICK\nHERE";
+                pause();
             }
+            message.text = "CLICK\nHERE";
         }
 
         private function onFocus(event:Event):void {
-            if (brick.active) {
-                // TODO
+            if (paused) {
+                message.text = "PAUSED";
             } else {
                 message.text = "PRESS\nSPACE";
             }
+        }
+
+        private function pause():void {
+            paused = true;
+            brick.active = brick.visible = false;
+            playfield.active = playfield.visible = false;
+            message.text = "PAUSED";
+        }
+
+        private function unpause():void {
+            paused = false;
+            brick.active = brick.visible = true;
+            playfield.active = playfield.visible = true;
+            message.text = "";
         }
 
         override public function update():void {
@@ -108,10 +123,16 @@ package net.noiseinstitute.game {
                 musicChannel.soundTransform = soundTransform;
             }
 
-            if (!brick.active && Input.pressed(Main.START)) {
-                message.text = "";
-                playfield.clear();
-                brick.newBrick();
+            if (Input.pressed(Main.START)) {
+                if (brick.active) {
+                    pause();
+                } else if (paused) {
+                    unpause();
+                } else {
+                    message.text = "";
+                    playfield.clear();
+                    brick.newBrick();
+                }
             }
 
             super.update();
