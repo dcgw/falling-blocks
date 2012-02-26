@@ -94,7 +94,11 @@ package net.noiseinstitute.game {
         }
 
         private function onFocus(event:Event):void {
-            message.text = "PRESS\nSPACE";
+            if (brick.active) {
+                // TODO
+            } else {
+                message.text = "PRESS\nSPACE";
+            }
         }
 
         override public function update():void {
