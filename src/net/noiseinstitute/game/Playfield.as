@@ -10,6 +10,9 @@ package net.noiseinstitute.game {
         [Embed(source="Explosion.mp3")]
         private static const EXPLOSION_SOUND:Class;
 
+        [Embed(source="Clear.mp3")]
+        private static const CLEAR_SOUND:Class;
+
         public static const WIDTH:int = COLUMNS * Block.WIDTH;
         public static const HEIGHT:int = ROWS * Block.HEIGHT;
 
@@ -33,6 +36,7 @@ package net.noiseinstitute.game {
         private var explosionCentre:Point = new Point();
 
         private var explosionSound:Sound = Sound(new EXPLOSION_SOUND);
+        private var clearSound:Sound = Sound(new CLEAR_SOUND);
 
         public static const ADJACENT_POINTS:Vector.<Point> = new <Point>[
             new Point(0, -1), new Point(1, 0), new Point(0, 1), new Point(-1, 0)];
@@ -168,6 +172,8 @@ package net.noiseinstitute.game {
         }
 
         override public function update():void {
+            var playClearSound:Boolean = false;
+
             var x:int;
             for (var y:int = ROWS-1; y >= 0; --y) {
                 if (clearingState[y] < 0) {
@@ -177,6 +183,9 @@ package net.noiseinstitute.game {
                             clearingState[y] = -1;
                             break;
                         }
+                    }
+                    if (clearingState[y] == 0) {
+                        playClearSound = true;
                     }
                 } else if (clearingState[y] < COLUMNS/2) {
                     blocks[y][clearingState[y]] = Block.NONE;
@@ -194,6 +203,10 @@ package net.noiseinstitute.game {
                     }
                     clearingState[0] = -1;
                 }
+            }
+
+            if (playClearSound) {
+                clearSound.play();
             }
         }
     }
