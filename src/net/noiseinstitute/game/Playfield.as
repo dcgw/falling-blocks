@@ -209,5 +209,16 @@ package net.noiseinstitute.game {
                 clearSound.play();
             }
         }
+
+        public function clear ():void {
+            for (var y:int = 0; y < ROWS; ++y) {
+                for (var x:int = 0; x < COLUMNS; ++x) {
+                    blocks[y][x] = Block.NONE;
+                    explodedBlocks[y][x] = Block.NONE;
+                    explodingBlocks[x + y * COLUMNS].x = -1;
+                }
+                clearingState[y] = -1;
+            }
+        }
     }
 }

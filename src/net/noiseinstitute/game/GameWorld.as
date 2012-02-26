@@ -5,6 +5,7 @@ package net.noiseinstitute.game {
 
     import net.flashpunk.World;
     import net.flashpunk.graphics.Image;
+    import net.flashpunk.utils.Input;
     import net.noiseinstitute.basecode.Range;
 
     public class GameWorld extends World {
@@ -30,6 +31,7 @@ package net.noiseinstitute.game {
         private var explosions:Vector.<Explosion> = new <Explosion>[];
         private var nextExplosion:int = 0;
 
+        private var brick:Brick;
         private var playfield:Playfield = new Playfield();
 
         public function GameWorld() {
@@ -42,8 +44,7 @@ package net.noiseinstitute.game {
             playfield.y = Math.floor((Main.HEIGHT - Playfield.HEIGHT) * 0.5);
             add(playfield);
 
-            var brick:Brick = new Brick(playfield);
-            brick.newBrick();
+            brick = new Brick(playfield);
             add(brick);
 
             for (var i:int = 0; i<MAX_EXPLOSIONS; ++i) {
@@ -70,6 +71,11 @@ package net.noiseinstitute.game {
                 var soundTransform:SoundTransform = musicStartChannel.soundTransform;
                 musicStartChannel.soundTransform = musicChannel.soundTransform;
                 musicChannel.soundTransform = soundTransform;
+            }
+
+            if (!brick.active && Input.pressed(Main.START)) {
+                playfield.clear();
+                brick.newBrick();
             }
 
             super.update();

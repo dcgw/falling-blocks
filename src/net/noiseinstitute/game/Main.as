@@ -17,6 +17,7 @@ package net.noiseinstitute.game {
         public static const ROTATE_RIGHT:String = "rotate-right";
         public static const DOWN:String = "down";
         public static const DROP:String = "drop";
+        public static const START:String = "start";
 
         public function Main () {
             super(WIDTH, HEIGHT, LOGIC_FPS, true);
@@ -27,6 +28,7 @@ package net.noiseinstitute.game {
             Input.define(ROTATE_RIGHT, Key.V, Key.UP);
             Input.define(DOWN, Key.DOWN);
             Input.define(DROP, Key.C);
+            Input.define(START, Key.ENTER, Key.SPACE);
 
             FP.screen.color = 0x444444;
             // FP.console.enable();

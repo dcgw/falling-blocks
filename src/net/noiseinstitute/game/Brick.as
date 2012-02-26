@@ -9,14 +9,6 @@ package net.noiseinstitute.game {
     public class Brick extends Entity {
         private static const FALL_INTERVAL_TICKS:int = 15;
 
-        public static const I:uint = 0;
-        public static const J:uint = 1;
-        public static const L:uint = 2;
-        public static const O:uint = 3;
-        public static const S:uint = 4;
-        public static const T:uint = 5;
-        public static const Z:uint = 6;
-
         public static const SHAPES:Vector.<Vector.<Point>> = new <Vector.<Point>>[
                 new <Point>[new Point(0, -2), new Point(0, -1), new Point(0, 0), new Point(0, 1)],
                 new <Point>[new Point(0, -1), new Point(0, 0), new Point(0, 1), new Point(-1, 1)],
@@ -57,6 +49,8 @@ package net.noiseinstitute.game {
         public function Brick(playfield:Playfield) {
             this.playfield = playfield;
             brickGraphic = new BrickGraphic();
+            active = false;
+            visible = false;
         }
 
         override public function update():void {
@@ -146,6 +140,7 @@ package net.noiseinstitute.game {
 
         public function newBrick():void {
             active = true;
+            visible = true;
             x = Math.floor(Playfield.COLUMNS * 0.5);
             y = -2;
             shape = Math.floor(Math.random() * 7);
