@@ -20,6 +20,8 @@ package net.noiseinstitute.game {
         public var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
         private var explodedBlocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
 
+        private var clearingState:Vector.<int> = new <int>[];
+
         public var onExplosion:Function;
 
         private var explodingBlocks:Vector.<Point> = new <Point>[];
@@ -38,6 +40,7 @@ package net.noiseinstitute.game {
                     explodedBlocks[y][x] = Block.NONE;
                     explodingBlocks[x + y * COLUMNS] = new Point(-1, -1);
                 }
+                clearingState[y] = -1;
             }
 
             graphic = new PlayfieldGraphic(blocks);
@@ -152,6 +155,36 @@ package net.noiseinstitute.game {
                 if (adjacentX >= 0 && adjacentX < COLUMNS && adjacentY >= 0 && adjacentY < ROWS
                         && blocks[adjacentY][adjacentX] == colour) {
                     explodeRecurse(adjacentX, adjacentY);
+                }
+            }
+        }
+
+        override public function update():void {
+            var x:int;
+            for (var y:int = ROWS-1; y >= 0; --y) {
+                if (clearingState[y] < 0) {
+                    clearingState[y] = 0;
+                    for (x = 0; x < COLUMNS; ++x) {
+                        if (blocks[y][x] == Block.NONE) {
+                            clearingState[y] = -1;
+                            break;
+                        }
+                    }
+                } else if (clearingState[y] < COLUMNS/2) {
+                    blocks[y][clearingState[y]] = Block.NONE;
+                    blocks[y][COLUMNS - clearingState[y] - 1] = Block.NONE;
+                    ++clearingState[y];
+                } else {
+                    for (var y2:int = y-1; y2 >= 0; --y2) {
+                        for (x = 0; x < COLUMNS; ++x) {
+                            blocks[y2+1][x] = blocks[y2][x];
+                        }
+                        clearingState[y2+1] = clearingState[y2];
+                    }
+                    for (x = 0; x < COLUMNS; ++x) {
+                        blocks[0][x] = Block.NONE;
+                    }
+                    clearingState[0] = -1;
                 }
             }
         }
