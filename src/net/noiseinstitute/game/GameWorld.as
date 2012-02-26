@@ -47,6 +47,7 @@ package net.noiseinstitute.game {
             add(playfield);
 
             brick = new Brick(playfield);
+            brick.onGameOver = onGameOver;
             add(brick);
 
             for (var i:int = 0; i<MAX_EXPLOSIONS; ++i) {
@@ -70,6 +71,10 @@ package net.noiseinstitute.game {
             nextExplosion = Range.wrap(nextExplosion+1, 0, MAX_EXPLOSIONS-1);
         }
 
+        private function onGameOver():void {
+            message.text = "GAME\nOVER";
+        }
+
         override public function update():void {
             if (musicChannel.soundTransform.volume == 0 && musicStartChannel.position >= music.length * 0.5) {
                 var soundTransform:SoundTransform = musicStartChannel.soundTransform;
@@ -78,6 +83,7 @@ package net.noiseinstitute.game {
             }
 
             if (!brick.active && Input.pressed(Main.START)) {
+                message.text = "";
                 playfield.clear();
                 brick.newBrick();
             }
