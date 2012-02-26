@@ -1,9 +1,13 @@
 package net.noiseinstitute.game {
     import net.flashpunk.World;
+    import net.flashpunk.graphics.Image;
     import net.noiseinstitute.basecode.Range;
 
     public class GameWorld extends World {
         private static const MAX_EXPLOSIONS:int = 4;
+
+        [Embed(source="Frame.png")]
+        private static const FRAME_IMAGE:Class;
 
         private var explosions:Vector.<Explosion> = new <Explosion>[];
         private var nextExplosion:int = 0;
@@ -25,6 +29,8 @@ package net.noiseinstitute.game {
             }
 
             playfield.onExplosion = onExplosion;
+
+            addGraphic(new Image(FRAME_IMAGE));
         }
 
         private function onExplosion(x:int, y:int, magnitude:Number):void {
