@@ -15,19 +15,19 @@ package net.noiseinstitute.game {
 
         private var tick:int = 0;
 
-        private static const SATURATION:Number = 1;
+        private static const SATURATION:Number = 0.25;
         private static const VALUE:Number = 1;
 
-        private static const MOVE_HEIGHT:Number = 320;
+        private static const MOVE_HEIGHT:Number = 280;
 
-        private static const MOVE_TICKS:int = 140;
+        private static const MOVE_TICKS:int = 180;
 
         public function Message() {
             x = Main.WIDTH * 0.5;
 
             textGraphic = new Text("");
             textGraphic.font = "font";
-            textGraphic.size = 16;
+            textGraphic.size = 24;
             textGraphic.color = FP.getColorHSV(0, SATURATION, VALUE);
 
             outline1 = new Text("");
@@ -38,8 +38,8 @@ package net.noiseinstitute.game {
             outline1.size = outline2.size = outline3.size=  outline4.size = textGraphic.size;
             outline1.color = outline2.color = outline3.color = outline4.color = 0x000000;
 
-            outline1.x = outline1.y = outline2.y = outline4.x = -1;
-            outline2.x = outline3.x = outline3.y = outline4.y = 1;
+            outline1.x = outline3.y = -2;
+            outline2.y = outline4.x = 2;
 
             text = "PRESS\nSPACE";
 
@@ -47,6 +47,8 @@ package net.noiseinstitute.game {
         }
 
         public function set text(text:String):void {
+            textGraphic.width = textGraphic.height = outline1.width = outline1.height = outline2.width
+                    = outline2.height = outline3.width = outline3.height = outline4.width = outline4.height = 0;
             textGraphic.text = outline1.text = outline2.text = outline3.text = outline4.text = text;
             textGraphic.centerOrigin();
             outline1.originX = outline2.originX = outline3.originX = outline4.originX = textGraphic.originX;
@@ -56,7 +58,7 @@ package net.noiseinstitute.game {
         override public function update():void {
             textGraphic.color = FP.getColorHSV((tick / COLOUR_TICKS) % 1, SATURATION, VALUE);
 
-            var moveHeight:Number = MOVE_HEIGHT - textGraphic.textHeight;
+            var moveHeight:Number = MOVE_HEIGHT - textGraphic.height;
 
             y = (Main.HEIGHT + Math.sin(tick * Math.PI * 2 / MOVE_TICKS) * MOVE_HEIGHT) * 0.5;
 
