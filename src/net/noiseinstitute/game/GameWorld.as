@@ -1,8 +1,11 @@
 package net.noiseinstitute.game {
+    import flash.events.Event;
+    import flash.events.MouseEvent;
     import flash.media.Sound;
     import flash.media.SoundChannel;
     import flash.media.SoundTransform;
 
+    import net.flashpunk.FP;
     import net.flashpunk.World;
     import net.flashpunk.graphics.Image;
     import net.flashpunk.utils.Input;
@@ -59,7 +62,7 @@ package net.noiseinstitute.game {
 
             addGraphic(new Image(FRAME_IMAGE));
 
-            message.text = "PRESS\nSPACE";
+            message.text = "CLICK\nHERE";
             add(message);
         }
 
@@ -74,6 +77,24 @@ package net.noiseinstitute.game {
 
         private function onGameOver():void {
             message.text = "GAME\nOVER";
+        }
+
+        override public function begin():void {
+            FP.stage.addEventListener(MouseEvent.MOUSE_DOWN, onFocus);
+            FP.stage.addEventListener(Event.ACTIVATE, onFocus);
+            FP.stage.addEventListener(Event.DEACTIVATE, onBlur);
+        }
+
+        private function onBlur(event:Event):void {
+            if (brick.active) {
+                // TODO
+            } else {
+                message.text = "CLICK\nHERE";
+            }
+        }
+
+        private function onFocus(event:Event):void {
+            message.text = "PRESS\nSPACE";
         }
 
         override public function update():void {

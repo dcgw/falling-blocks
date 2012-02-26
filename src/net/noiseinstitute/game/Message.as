@@ -1,4 +1,6 @@
 package net.noiseinstitute.game {
+    import flashx.textLayout.formats.TextAlign;
+
     import net.flashpunk.Entity;
     import net.flashpunk.FP;
     import net.flashpunk.graphics.Graphiclist;
@@ -29,6 +31,7 @@ package net.noiseinstitute.game {
             textGraphic.font = "font";
             textGraphic.size = 24;
             textGraphic.color = FP.getColorHSV(0, SATURATION, VALUE);
+            textGraphic.align = TextAlign.CENTER;
 
             outline1 = new Text("");
             outline2 = new Text("");
@@ -37,6 +40,7 @@ package net.noiseinstitute.game {
             outline1.font = outline2.font = outline3.font = outline4.font = textGraphic.font;
             outline1.size = outline2.size = outline3.size=  outline4.size = textGraphic.size;
             outline1.color = outline2.color = outline3.color = outline4.color = 0x000000;
+            outline1.align = outline2.align = outline3.align = outline4.align = textGraphic.align;
 
             outline1.x = outline3.y = -2;
             outline2.y = outline4.x = 2;
