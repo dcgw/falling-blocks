@@ -29,7 +29,7 @@ package net.noiseinstitute.game {
             Input.define(DROP, Key.C);
 
             FP.screen.color = 0x444444;
-            FP.console.enable();
+            // FP.console.enable();
 
             FP.world = new GameWorld();
         }

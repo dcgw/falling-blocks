@@ -44,6 +44,8 @@ package net.noiseinstitute.game {
 
         private var ticks:int = 0;
 
+        private var dropping:Boolean = false;
+
         public static const rotationMatrix:Vector.<Vector.<Point>> = new <Vector.<Point>>[
             new <Point>[new Point(1, 0), new Point(0, 1)],
             new <Point>[new Point(0, -1), new Point(1, 0)],
@@ -86,15 +88,12 @@ package net.noiseinstitute.game {
             }
 
             if (Input.pressed(Main.DROP)) {
-                ticks = FALL_INTERVAL_TICKS - 1;
-                while (!collides(x, y+1, rotation) && !explodes(x, y + 1, rotation)) {
-                    ++y;
-                }
+                dropping = true;
             }
 
             var settled:Boolean = false;
 
-            if (Input.pressed(Main.DOWN) || ++ticks == FALL_INTERVAL_TICKS) {
+            if (dropping || Input.pressed(Main.DOWN) || ++ticks == FALL_INTERVAL_TICKS) {
                 if (collides(x, y+1, rotation)) {
                     settled = true;
                 } else {
@@ -139,6 +138,7 @@ package net.noiseinstitute.game {
             y = -2;
             shape = Math.floor(Math.random() * 7);
             rotation = Math.floor(Math.random() * 4);
+            dropping = false;
         }
 
         private function collides(x:int, y:int, rotation:int):Boolean {
