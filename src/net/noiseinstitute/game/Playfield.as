@@ -128,7 +128,7 @@ package net.noiseinstitute.game {
             }
         }
 
-        public function explodeRecurse(blockX:int, blockY:int):void {
+        private function explodeRecurse(blockX:int, blockY:int):void {
             var i:int = 0;
             while (i<explodingBlocks.length && explodingBlocks[i].x != -1) {
                 if (explodingBlocks[i].x == blockX && explodingBlocks[i].y == blockY) {
