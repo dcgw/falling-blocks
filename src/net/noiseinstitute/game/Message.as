@@ -5,7 +5,7 @@ package net.noiseinstitute.game {
     import net.flashpunk.graphics.Text;
 
     public class Message extends Entity {
-        private var text:Text;
+        private var textGraphic:Text;
         private var outline1:Text;
         private var outline2:Text;
         private var outline3:Text;
@@ -18,29 +18,48 @@ package net.noiseinstitute.game {
         private static const SATURATION:Number = 1;
         private static const VALUE:Number = 1;
 
+        private static const MOVE_HEIGHT:Number = 320;
+
+        private static const MOVE_TICKS:int = 140;
+
         public function Message() {
-            text = new Text("PRESS\nSPACE");
-            text.font = "font";
-            text.size = 16;
-            text.color = FP.getColorHSV(0, SATURATION, VALUE);
+            x = Main.WIDTH * 0.5;
+
+            textGraphic = new Text("");
+            textGraphic.font = "font";
+            textGraphic.size = 16;
+            textGraphic.color = FP.getColorHSV(0, SATURATION, VALUE);
 
             outline1 = new Text("");
             outline2 = new Text("");
             outline3 = new Text("");
             outline4 = new Text("");
-            outline1.text = outline2.text = outline3.text = outline4.text = text.text;
-            outline1.font = outline2.font = outline3.font = outline4.font = text.font;
-            outline1.size = outline2.size = outline3.size=  outline4.size = text.size;
+            outline1.font = outline2.font = outline3.font = outline4.font = textGraphic.font;
+            outline1.size = outline2.size = outline3.size=  outline4.size = textGraphic.size;
             outline1.color = outline2.color = outline3.color = outline4.color = 0x000000;
 
             outline1.x = outline1.y = outline2.y = outline4.x = -1;
             outline2.x = outline3.x = outline3.y = outline4.y = 1;
 
-            graphic = new Graphiclist(outline1, outline2, outline3, outline4, text);
+            text = "PRESS\nSPACE";
+
+            graphic = new Graphiclist(outline1, outline2, outline3, outline4, textGraphic);
+        }
+
+        public function set text(text:String):void {
+            textGraphic.text = outline1.text = outline2.text = outline3.text = outline4.text = text;
+            textGraphic.centerOrigin();
+            outline1.originX = outline2.originX = outline3.originX = outline4.originX = textGraphic.originX;
+            outline1.originY = outline2.originY = outline3.originY = outline4.originY = textGraphic.originY;
         }
 
         override public function update():void {
-            text.color = FP.getColorHSV((tick / COLOUR_TICKS) % 1, SATURATION, VALUE);
+            textGraphic.color = FP.getColorHSV((tick / COLOUR_TICKS) % 1, SATURATION, VALUE);
+
+            var moveHeight:Number = MOVE_HEIGHT - textGraphic.textHeight;
+
+            y = (Main.HEIGHT + Math.sin(tick * Math.PI * 2 / MOVE_TICKS) * MOVE_HEIGHT) * 0.5;
+
             ++tick;
         }
     }
