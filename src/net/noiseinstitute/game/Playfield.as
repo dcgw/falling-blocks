@@ -1,11 +1,15 @@
 package net.noiseinstitute.game {
     import flash.geom.Point;
+    import flash.media.Sound;
 
     import net.flashpunk.Entity;
     import net.noiseinstitute.basecode.Static;
     import net.noiseinstitute.basecode.VectorMath;
 
     public class Playfield extends Entity {
+        [Embed(source="Explosion.mp3")]
+        private static const EXPLOSION_SOUND:Class;
+
         public static const WIDTH:int = COLUMNS * Block.WIDTH;
         public static const HEIGHT:int = ROWS * Block.HEIGHT;
 
@@ -28,6 +32,8 @@ package net.noiseinstitute.game {
         private var explodingBlocksCount:int = 0;
         private var explosionCentre:Point = new Point();
 
+        private var explosionSound:Sound = Sound(new EXPLOSION_SOUND);
+
         public static const ADJACENT_POINTS:Vector.<Point> = new <Point>[
             new Point(0, -1), new Point(1, 0), new Point(0, 1), new Point(-1, 0)];
 
@@ -47,6 +53,8 @@ package net.noiseinstitute.game {
         }
 
         public function explode(blockX:int, blockY:int):void {
+            explosionSound.play();
+
             var i:int;
 
             for (i=0; i<explodingBlocks.length; ++i) {
