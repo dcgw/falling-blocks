@@ -70,7 +70,7 @@ package net.noiseinstitute.game {
             message.text = "CLICK\nHERE";
             add(message);
 
-            score.x = 463;
+            score.x = 464;
             score.y = 404;
             add(score);
         }
