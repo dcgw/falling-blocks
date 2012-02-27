@@ -20,7 +20,7 @@ package net.noiseinstitute.game {
         public static const COLUMNS:int = 10;
 
         private static const EXPLOSION_CENTRE_Y_BIAS:Number = 0.6;
-        private static const EXPLOSION_MAGNITUDE_MULTIPLIER:Number = 2.25;
+        private static const EXPLOSION_MAGNITUDE_MULTIPLIER:Number = 1.8;
         private static const EXPLOSION_PERTURB_RANDOMNESS:Number = 0.25;
         private static const EXPLOSION_ANGLE_RANDOMNESS:Number = 10;
 
