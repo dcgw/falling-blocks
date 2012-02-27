@@ -38,10 +38,12 @@ package net.noiseinstitute.game {
         private var explosionSound:Sound = Sound(new EXPLOSION_SOUND);
         private var clearSound:Sound = Sound(new CLEAR_SOUND);
 
+        private var score:Score;
+
         public static const ADJACENT_POINTS:Vector.<Point> = new <Point>[
             new Point(0, -1), new Point(1, 0), new Point(0, 1), new Point(-1, 0)];
 
-        public function Playfield() {
+        public function Playfield(score:Score) {
             for (var y:int = 0; y < ROWS; ++y) {
                 blocks[y] = new <uint>[];
                 explodedBlocks[y] = new <uint>[];
@@ -54,6 +56,8 @@ package net.noiseinstitute.game {
             }
 
             graphic = new PlayfieldGraphic(blocks);
+
+            this.score = score;
         }
 
         public function explode(blockX:int, blockY:int):void {

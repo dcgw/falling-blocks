@@ -10,6 +10,8 @@ package net.noiseinstitute.game {
         private static const FALL_INTERVAL_TICKS_AT_START:int = 25;
         private static const TICKS_BETWEEN_SPEED_INCREASES:int = 600;
 
+        private static const START_BLOCKS_ABOVE_PLAYFIELD:int = 2;
+
         public static const SHAPES:Vector.<Vector.<Point>> = new <Vector.<Point>>[
                 new <Point>[new Point(0, -2), new Point(0, -1), new Point(0, 0), new Point(0, 1)],
                 new <Point>[new Point(0, -1), new Point(0, 0), new Point(0, 1), new Point(-1, 1)],
@@ -35,6 +37,8 @@ package net.noiseinstitute.game {
         public var rotation:int;
 
         private var playfield:Playfield;
+        private var score:Score;
+
         private var brickGraphic:BrickGraphic;
 
         private var gameTicks:int = 0;
@@ -42,14 +46,18 @@ package net.noiseinstitute.game {
 
         private var dropping:Boolean = false;
 
+        private var pointMultiplier:int = 0;
+        private var pointValue:int = 0;
+
         public static const rotationMatrix:Vector.<Vector.<Point>> = new <Vector.<Point>>[
             new <Point>[new Point(1, 0), new Point(0, 1)],
             new <Point>[new Point(0, -1), new Point(1, 0)],
             new <Point>[new Point(-1, 0), new Point(0, -1)],
             new <Point>[new Point(0, 1), new Point(-1, 0)]];
 
-        public function Brick(playfield:Playfield) {
+        public function Brick(playfield:Playfield, score:Score) {
             this.playfield = playfield;
+            this.score = score;
             brickGraphic = new BrickGraphic();
             active = false;
             visible = false;
@@ -89,18 +97,24 @@ package net.noiseinstitute.game {
                 dropping = true;
             }
 
+            var down:Boolean = Input.pressed(Main.DOWN);
+
             var settled:Boolean = false;
 
             var fallIntervalTicks:int = FALL_INTERVAL_TICKS_AT_START
                     - Math.floor(gameTicks / TICKS_BETWEEN_SPEED_INCREASES);
 
-            if (dropping || Input.pressed(Main.DOWN) || ++fallTicks >= fallIntervalTicks) {
+            if (dropping || down || ++fallTicks >= fallIntervalTicks) {
                 if (collides(x, y+1, rotation)) {
                     settled = true;
                 } else {
                     ++y;
                 }
                 fallTicks = 0;
+
+                if (!dropping && !down) {
+                    --pointValue;
+                }
             }
 
             var shapeDefinition:Vector.<Point> = SHAPES[shape];
@@ -124,6 +138,10 @@ package net.noiseinstitute.game {
                     } else {
                         playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
                     }
+                }
+
+                if (!exploding && active) {
+                    score.points += pointMultiplier * pointValue;
                 }
             }
 
@@ -154,11 +172,13 @@ package net.noiseinstitute.game {
             active = true;
             visible = true;
             x = Math.floor(Playfield.COLUMNS * 0.5);
-            y = -2;
+            y = -START_BLOCKS_ABOVE_PLAYFIELD;
             shape = Math.floor(Math.random() * 7);
             rotation = Math.floor(Math.random() * 4);
             dropping = false;
             fallTicks = 0;
+            pointMultiplier = Math.floor(gameTicks / TICKS_BETWEEN_SPEED_INCREASES) + 1;
+            pointValue = Playfield.ROWS + START_BLOCKS_ABOVE_PLAYFIELD;
         }
 
         private function collides(x:int, y:int, rotation:int):Boolean {

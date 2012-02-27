@@ -35,7 +35,7 @@ package net.noiseinstitute.game {
         private var nextExplosion:int = 0;
 
         private var brick:Brick;
-        private var playfield:Playfield = new Playfield();
+        private var playfield:Playfield = new Playfield(score);
 
         private var message:Message = new Message();
 
@@ -53,7 +53,7 @@ package net.noiseinstitute.game {
             playfield.y = Math.floor((Main.HEIGHT - Playfield.HEIGHT) * 0.5);
             add(playfield);
 
-            brick = new Brick(playfield);
+            brick = new Brick(playfield, score);
             brick.onGameOver = onGameOver;
             add(brick);
 
@@ -136,6 +136,7 @@ package net.noiseinstitute.game {
                     unpause();
                 } else {
                     message.text = "";
+                    score.points = 0;
                     playfield.clear();
                     brick.newGame();
                 }
