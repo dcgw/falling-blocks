@@ -41,6 +41,8 @@ package net.noiseinstitute.game {
 
         private var paused:Boolean = false;
 
+        private var score:Score = new Score();
+
         public function GameWorld() {
             musicStartChannel = musicStart.play();
             musicStartChannel.soundTransform = new SoundTransform(MUSIC_VOLUME);
@@ -66,6 +68,10 @@ package net.noiseinstitute.game {
 
             message.text = "CLICK\nHERE";
             add(message);
+
+            score.x = 463;
+            score.y = 404;
+            add(score);
         }
 
         private function onExplosion(x:int, y:int, magnitude:Number):void {
