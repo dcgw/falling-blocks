@@ -240,6 +240,8 @@ package net.noiseinstitute.game {
                         points[0][x] = 0;
                     }
                     clearingPosition[0] = -1;
+
+                    ++y;
                 }
             }
 
