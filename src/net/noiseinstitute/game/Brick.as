@@ -7,7 +7,8 @@ package net.noiseinstitute.game {
     import net.noiseinstitute.basecode.Range;
 
     public class Brick extends Entity {
-        private static const FALL_INTERVAL_TICKS:int = 15;
+        private static const FALL_INTERVAL_TICKS_AT_START:int = 25;
+        private static const TICKS_BETWEEN_SPEED_INCREASES:int = 600;
 
         public static const SHAPES:Vector.<Vector.<Point>> = new <Vector.<Point>>[
                 new <Point>[new Point(0, -2), new Point(0, -1), new Point(0, 0), new Point(0, 1)],
@@ -36,7 +37,8 @@ package net.noiseinstitute.game {
         private var playfield:Playfield;
         private var brickGraphic:BrickGraphic;
 
-        private var ticks:int = 0;
+        private var gameTicks:int = 0;
+        private var fallTicks:int = 0;
 
         private var dropping:Boolean = false;
 
@@ -89,13 +91,16 @@ package net.noiseinstitute.game {
 
             var settled:Boolean = false;
 
-            if (dropping || Input.pressed(Main.DOWN) || ++ticks == FALL_INTERVAL_TICKS) {
+            var fallIntervalTicks:int = FALL_INTERVAL_TICKS_AT_START
+                    - Math.floor(gameTicks / TICKS_BETWEEN_SPEED_INCREASES);
+
+            if (dropping || Input.pressed(Main.DOWN) || ++fallTicks >= fallIntervalTicks) {
                 if (collides(x, y+1, rotation)) {
                     settled = true;
                 } else {
                     ++y;
                 }
-                ticks = 0;
+                fallTicks = 0;
             }
 
             var shapeDefinition:Vector.<Point> = SHAPES[shape];
@@ -136,6 +141,13 @@ package net.noiseinstitute.game {
             if (active && (settled || exploding)) {
                 newBrick();
             }
+
+            ++gameTicks;
+        }
+
+        public function newGame():void {
+            gameTicks = 0;
+            newBrick();
         }
 
         public function newBrick():void {
@@ -146,6 +158,7 @@ package net.noiseinstitute.game {
             shape = Math.floor(Math.random() * 7);
             rotation = Math.floor(Math.random() * 4);
             dropping = false;
+            fallTicks = 0;
         }
 
         private function collides(x:int, y:int, rotation:int):Boolean {

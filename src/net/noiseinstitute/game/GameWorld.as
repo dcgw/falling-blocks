@@ -137,7 +137,7 @@ package net.noiseinstitute.game {
                 } else {
                     message.text = "";
                     playfield.clear();
-                    brick.newBrick();
+                    brick.newGame();
                 }
             }
 
