@@ -23,11 +23,16 @@ package net.noiseinstitute.game {
         private static const EXPLOSION_MAGNITUDE_MULTIPLIER:Number = 1.8;
         private static const EXPLOSION_PERTURB_RANDOMNESS:Number = 0.25;
         private static const EXPLOSION_ANGLE_RANDOMNESS:Number = 10;
+        private static const EXPLODED_POINTS_MULTIPLIER:Number = 0.5;
 
         public var blocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
         private var explodedBlocks:Vector.<Vector.<uint>> = new <Vector.<uint>>[];
 
-        private var clearingState:Vector.<int> = new <int>[];
+        public var points:Vector.<Vector.<int>> = new <Vector.<int>>[];
+        public var explodedPoints:Vector.<Vector.<int>> = new <Vector.<int>>[];
+
+        private var clearingPosition:Vector.<int> = new <int>[];
+        private var clearingMultiplier:int = 0;
 
         public var onExplosion:Function;
 
@@ -47,12 +52,21 @@ package net.noiseinstitute.game {
             for (var y:int = 0; y < ROWS; ++y) {
                 blocks[y] = new <uint>[];
                 explodedBlocks[y] = new <uint>[];
+
+                points[y] = new <int>[];
+                explodedPoints[y] = new <int>[];
+
                 for (var x:int = 0; x < COLUMNS; ++x) {
                     blocks[y][x] = Block.NONE;
                     explodedBlocks[y][x] = Block.NONE;
+
+                    points[y][x] = 0;
+                    explodedPoints[y][x] = 0;
+
                     explodingBlocks[x + y * COLUMNS] = new Point(-1, -1);
                 }
-                clearingState[y] = -1;
+
+                clearingPosition[y] = -1;
             }
 
             graphic = new PlayfieldGraphic(blocks);
@@ -131,9 +145,11 @@ package net.noiseinstitute.game {
 
                             if (newY >= 0) {
                                 explodedBlocks[newY][newX] = blocks[y][x];
+                                explodedPoints[newY][newX] = points[y][x] * EXPLODED_POINTS_MULTIPLIER;
                             }
                         } else {
                             explodedBlocks[y][x] = blocks[y][x];
+                            explodedPoints[y][x] = points[y][x];
                         }
                     }
                 }
@@ -143,6 +159,9 @@ package net.noiseinstitute.game {
                 for (x = 0; x < COLUMNS; ++x) {
                     blocks[y][x] = explodedBlocks[y][x];
                     explodedBlocks[y][x] = Block.NONE;
+
+                    points[y][x] = explodedPoints[y][x];
+                    explodedPoints[y][x] = 0;
                 }
             }
         }
@@ -180,32 +199,47 @@ package net.noiseinstitute.game {
 
             var x:int;
             for (var y:int = ROWS-1; y >= 0; --y) {
-                if (clearingState[y] < 0) {
-                    clearingState[y] = 0;
+                if (clearingPosition[y] < 0) {
+                    clearingPosition[y] = 0;
                     for (x = 0; x < COLUMNS; ++x) {
                         if (blocks[y][x] == Block.NONE) {
-                            clearingState[y] = -1;
+                            clearingPosition[y] = -1;
                             break;
                         }
                     }
-                    if (clearingState[y] == 0) {
+                    if (clearingPosition[y] == 0) {
+                        ++clearingMultiplier;
                         playClearSound = true;
                     }
-                } else if (clearingState[y] < COLUMNS/2) {
-                    blocks[y][clearingState[y]] = Block.NONE;
-                    blocks[y][COLUMNS - clearingState[y] - 1] = Block.NONE;
-                    ++clearingState[y];
+                } else if (clearingPosition[y] < COLUMNS/2) {
+                    blocks[y][clearingPosition[y]] = Block.NONE;
+                    blocks[y][COLUMNS - clearingPosition[y] - 1] = Block.NONE;
+
+                    score.points += clearingMultiplier * points[y][clearingPosition[y]];
+                    if (COLUMNS - clearingPosition[y] - 1 != clearingPosition[y]) {
+                        score.points += clearingMultiplier
+                                * points[y][COLUMNS - clearingPosition[y] - 1];
+                    }
+
+                    points[y][clearingPosition[y]] = 0;
+                    points[y][COLUMNS - clearingPosition[y] - 1] = 0;
+
+                    ++clearingPosition[y];
                 } else {
+                    --clearingMultiplier;
+
                     for (var y2:int = y-1; y2 >= 0; --y2) {
                         for (x = 0; x < COLUMNS; ++x) {
                             blocks[y2+1][x] = blocks[y2][x];
+                            points[y2+1][x] = points[y2][x];
                         }
-                        clearingState[y2+1] = clearingState[y2];
+                        clearingPosition[y2+1] = clearingPosition[y2];
                     }
                     for (x = 0; x < COLUMNS; ++x) {
                         blocks[0][x] = Block.NONE;
+                        points[0][x] = 0;
                     }
-                    clearingState[0] = -1;
+                    clearingPosition[0] = -1;
                 }
             }
 
@@ -219,10 +253,16 @@ package net.noiseinstitute.game {
                 for (var x:int = 0; x < COLUMNS; ++x) {
                     blocks[y][x] = Block.NONE;
                     explodedBlocks[y][x] = Block.NONE;
+
+                    points[y][x] = 0;
+                    explodedPoints[y][x] = 0;
+
                     explodingBlocks[x + y * COLUMNS].x = -1;
                 }
-                clearingState[y] = -1;
+                clearingPosition[y] = -1;
             }
+
+            clearingMultiplier = 0;
         }
     }
 }

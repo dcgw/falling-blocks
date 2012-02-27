@@ -137,6 +137,7 @@ package net.noiseinstitute.game {
                         }
                     } else {
                         playfield.blocks[blockY][blockX] = SHAPE_COLOURS[shape];
+                        playfield.points[blockY][blockX] = pointMultiplier * pointValue;
                     }
                 }
 

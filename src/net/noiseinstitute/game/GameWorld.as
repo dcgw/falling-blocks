@@ -35,7 +35,7 @@ package net.noiseinstitute.game {
         private var nextExplosion:int = 0;
 
         private var brick:Brick;
-        private var playfield:Playfield = new Playfield(score);
+        private var playfield:Playfield;
 
         private var message:Message = new Message();
 
@@ -49,6 +49,7 @@ package net.noiseinstitute.game {
             musicChannel = music.play(0, int.MAX_VALUE);
             musicChannel.soundTransform = new SoundTransform(0);
 
+            playfield = new Playfield(score);
             playfield.x = Math.floor((Main.WIDTH - Playfield.WIDTH) * 0.5);
             playfield.y = Math.floor((Main.HEIGHT - Playfield.HEIGHT) * 0.5);
             add(playfield);
